@@ -14,7 +14,7 @@ router.get('', async (req, res) => {
             description: "Blog using Nodejs, Express and MongoDB"
         }
 
-        let perPage = 2;
+        let perPage = 10;
         let page = req.query.page || 1; //1 => get the first 10 posts
 
         const data = await Post.aggregate([ { $sort: { createdAt: -1} } ])//-1 = oldest on top (biggest number?)
@@ -49,6 +49,47 @@ router.get('', async (req, res) => {
 router.get('/about', (req, res) => {
     res.render('about');
 });
+
+
+/** 
+GET
+POST :id 
+*/ 
+router.get('/post/:id', async (req, res) => {
+    try{
+
+        console.log(req.params.id) //doesn't return anything???
+        let slug = req.params.id;
+
+        const data = await Post.findById({_id: slug})
+
+
+        const locals = {
+            title: "Nodejs Blog",
+            description: "Blog using Nodejs, Express and MongoDB"
+        }
+
+
+        res.render('post', { 
+            locals, 
+            data,
+            currentRoute: '/post/${slug}'
+        })
+
+
+
+    } catch(e){
+        console.log(e);
+    }
+
+
+});
+
+
+
+
+
+
 
 module.exports = router;
 
