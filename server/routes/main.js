@@ -57,15 +57,13 @@ POST :id
 */ 
 router.get('/post/:id', async (req, res) => {
     try{
-
-        console.log(req.params.id) //doesn't return anything???
         let slug = req.params.id;
 
         const data = await Post.findById({_id: slug})
 
 
         const locals = {
-            title: "Nodejs Blog",
+            title: data.title,
             description: "Blog using Nodejs, Express and MongoDB"
         }
 
@@ -73,7 +71,7 @@ router.get('/post/:id', async (req, res) => {
         res.render('post', { 
             locals, 
             data,
-            currentRoute: '/post/${slug}'
+            currentRoute: `/post/${slug}`
         })
 
 
@@ -85,7 +83,42 @@ router.get('/post/:id', async (req, res) => {
 
 });
 
+/** 
+POST
+Post
+*/ 
+router.post('/search', async (req, res) => { 
+    //does post causes url to change with
+    //app.use(express.urlencoded({ extended: true})) and
+    //app.use(express.json())???
+    try{
+        const locals = {
+            title: "Search",
+            description: "Blog using Nodejs, Express and MongoDB"
+        }
 
+        let searchTerm = req.body.searchTerm; //reading form we called searchTerm in ejs file
+        const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9 ]/g, "")//removes special characters (if char not in [], replace with "")
+
+        const data = await Post.find({
+            $or: [ //or is mongoDB oporator (match with either) //i => case insensitive
+              { title: { $regex: new RegExp(searchNoSpecialChar, 'i') }}, 
+              { body: { $regex: new RegExp(searchNoSpecialChar, 'i') }}
+            ]
+
+            //new RegExp(a,"i") => creates a new case unsensitive expression (a##b => ab)
+            //"$reg ex" allows you (the key? ("title" and "body")) to read the expression to know what to compare with
+          });
+            
+        res.render("search", {
+            data,
+            locals
+        })
+
+    } catch(e){
+        console.log(e);
+    }
+});
 
 
 

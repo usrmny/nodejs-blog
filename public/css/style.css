@@ -1,4 +1,4 @@
-/*Variables aren't working?*/
+/*Variables aren't working?  container*/
 
 .root{
     --black: #1c1c1c;
@@ -272,7 +272,7 @@ img {
 
 .searchBar {
     visibility: hidden;
-    transform: translateY(-100px);
+    transform: translateY(-100px); 
     background-color: var(--black, #1c1c1c);
     padding: 4px 0;
     position: absolute;

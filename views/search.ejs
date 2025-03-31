@@ -1,14 +1,9 @@
 <div class="author">
-    <h1 class="author__heading">Hi, I am Youssef</h1>
-    <p class="author__body">I am following some tutorials to learn Nodejs</p>
+    <h1 class="author__heading">Search Results</h1>
 </div>
-<img src="/img/hero-imgae-webp" alt="I'm not sure just yet TODO" class="hero-image" width="981" height="528">
 
 <section class="articles">
-    <h2 class="articles__heading">Latest Posts</h2>
-
     <ul class="articles__ul">
-
         <% data.forEach(post => { %> <!--LOOPS OVER DATA TO PLACE ALL THE POSTS-->
             <li>
                 <a href="/post/<%=  post._id %>">
@@ -17,15 +12,5 @@
                 </a>
             </li>
         <% }) %>
-
-        
-
-        
     </ul>
-
-    <% if (nextPage !== null) { %>
-        <a href="/?page=<%= nextPage %>" class="pagination">&lt; View Older Posts</a>
-
-     
-    <% } %>
 </section>
