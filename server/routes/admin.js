@@ -2,8 +2,31 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/post') 
 const User = require('../models/User') 
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const adminLayout = '../views/layouts/admin'
+const jwtSecret = process.env.JWT_SECRET;
+
+/** 
+/*
+Admin - Check Page 
+*/ 
+const authMiddleware = (req,res,next) => { //verify if user has token => yes = logged in automatically, else not
+    const token = req.cookies.token;
+
+    if(!token){
+        return res.status(401).json({message: 'Unauthorized1'}) //can render an actual page instead to make website nicer!
+    }
+    
+    try{
+        const decoded = jwt.verify({token, jwtSecret});//?
+        req.user._id = decoded.user._id; //Causing the error???
+        next();//? i should research 
+    }catch(e){
+        res.status(401).json({message: 'Unauthorized2'}) //can render an actual page instead to make website nicer!
+    }
+}
 
 
 /** 
@@ -35,9 +58,22 @@ router.post('/admin', async (req, res) => {
     try{
 
         const {username, password} = req.body;
-        console.log(req.body)
+        const user = await User.findOne({username});
 
-        res.redirect('admin')
+        if(!user){
+            res.status(401).json({message: 'Invalid Credentials'})
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if(!isPasswordValid){
+            res.status(401).json({message: 'Invalid Credentials'})
+        }
+
+        const token = jwt.sign({userId: user._id}, jwtSecret)
+        res.cookie('token', token, { httpOnly: true})
+
+        res.redirect('/dashboard')
 
     } catch(e){
         console.log(e);
@@ -46,5 +82,41 @@ router.post('/admin', async (req, res) => {
 
 });
 
+/** 
+POST
+Admin - Register
+*/ 
+
+router.post('/register', async (req, res) => {
+    try{
+        const {username, password} = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        try{
+            const user = await User.create({ username, password:hashedPassword})
+            res.status(201).json({message: 'User Created', user});
+        } catch (e){
+            if(e.code === 11000){
+                res.status(409).json({message: 'User already in use'})
+            }
+            res.status(500).json({message: 'Internal server error'})
+        }
+
+    } catch(e){
+        console.log(e);
+    }
+
+
+});
+
+/** 
+POST
+Admin - Check Login  
+*/ 
+
+router.get('/dashboard', authMiddleware, async (req, res) => {//how does middleware work?
+
+    res.render('admin/dashboard')
+});
 
 module.exports = router;

@@ -2,6 +2,9 @@ require('dotenv').config();
 
 const express = require('express');
 const expressLayout = require('express-ejs-layouts');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')
 
 const connectDB = require('./server/config/db')
 
@@ -13,11 +16,23 @@ connectDB();
 
 app.use(express.urlencoded({ extended: true})) //to be able to parse data from forms mainly with method="POST"
 app.use(express.json()) //to be able to parse json data
+app.use(cookieParser())//middleware
 
 //template engine => for ejs
 app.use(expressLayout);
 app.set('layout', './layouts/main');
 app.set('view engine', 'ejs');
+
+app.use(session({
+    secret: 'keyboard cal',
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI
+    }),
+    cookie: {message: new Date (Date.now() * (3600000))}// sets exp date?
+
+}))
 
 
  //points to public folder => don't have to exit folder to enter 
