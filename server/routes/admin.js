@@ -16,15 +16,15 @@ const authMiddleware = (req,res,next) => { //verify if user has token => yes = l
     const token = req.cookies.token;
 
     if(!token){
-        return res.status(401).json({message: 'Unauthorized1'}) //can render an actual page instead to make website nicer!
+        return res.status(401).json({message: 'Unauthorized'}) //can render an actual page instead to make website nicer!
     }
     
     try{
-        const decoded = jwt.verify({token, jwtSecret});//?
-        req.user._id = decoded.user._id; //Causing the error???
-        next();//? i should research 
+        const decoded = jwt.verify(token, jwtSecret);
+        req.userId = decoded.userId; 
+        next();
     }catch(e){
-        res.status(401).json({message: 'Unauthorized2'}) //can render an actual page instead to make website nicer!
+        res.status(401).json({message: 'Unauthorized'}) //can render an actual page instead to make website nicer!
     }
 }
 
@@ -110,13 +110,80 @@ router.post('/register', async (req, res) => {
 });
 
 /** 
-POST
-Admin - Check Login  
+GET
+Admin Dashboard  
 */ 
 
 router.get('/dashboard', authMiddleware, async (req, res) => {//how does middleware work?
 
-    res.render('admin/dashboard')
+    try{
+        const locals = {
+            title: "Dashboard",
+            description: "Blog using Nodejs, Express and MongoDB"
+        }
+
+        const data = await Post.find();
+        res.render('admin/dashboard', {
+            locals,
+            data,
+            layout: adminLayout
+        })
+    }
+    catch(e){
+        console.log(e)
+    }
 });
+
+
+/** 
+GET
+Admin - Create New Post  
+*/ 
+router.get('/add-post', authMiddleware, async (req, res) => {//how does middleware work?
+
+    try{
+        const locals = {
+            title: "Add Post",
+            description: "Blog using Nodejs, Express and MongoDB"
+        }
+
+        const data = await Post.find();
+        res.render('admin/add-post', {
+            locals,
+            layout: adminLayout
+        })
+    }
+    catch(e){
+        console.log(e)
+    }
+});
+
+/** 
+POST
+Admin - Create New Post  
+*/ 
+router.post('/add-post', authMiddleware, async (req, res) => {//how does middleware work?
+
+    try{
+        try{
+            const newPost = new Post({
+                title: req.body.title,
+                body: req.body.body
+            })
+
+            await Post.create(newPost)
+            res.redirect('/dashboard')
+        }
+        catch(e){
+            console.log(e)
+        }
+    }
+    catch(e){
+        console.log(e)
+    }
+});
+
+
+
 
 module.exports = router;
