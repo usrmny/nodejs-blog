@@ -183,6 +183,88 @@ router.post('/add-post', authMiddleware, async (req, res) => {//how does middlew
     }
 });
 
+/** 
+GET
+Admin - Edit Post  
+*/ 
+router.get('/edit-post/:id', authMiddleware, async (req, res) => {//id given when <a> is clicked (from ejs file)
+
+    try{
+
+        const locals = {
+            title: "Add Post",
+            description: "Blog using Nodejs, Express and MongoDB"
+        }
+
+        const data = await Post.findOne({_id: req.params.id})
+
+        res.render('admin/edit-post', {
+            locals,
+            data, 
+            layout: adminLayout
+        })
+    }
+    catch(e){
+        console.log(e)
+    }
+});
+
+/** 
+PUT
+Admin - Edit Post  
+*/ 
+router.put('/edit-post/:id', authMiddleware, async (req, res) => {//how does middleware work?
+
+    try{
+        await Post.findByIdAndUpdate(req.params.id, {
+            title: req.body.title,
+            body: req.body.body,
+            updatedAt: Date.now()
+        })
+
+        res.redirect(`/edit-post/${req.params.id}`)
+    }
+    catch(e){
+        console.log(e)
+    }
+});
+
+
+/** 
+DELETE
+Admin - Delete Post  
+*/ 
+router.delete('/delete-post/:id', authMiddleware, async (req, res) => {
+
+    try{
+        await Post.deleteOne({_id: req.params.id})//mongodb method
+
+        res.redirect(`/dashboard`)
+    }
+    catch(e){
+        console.log(e)
+    }
+});
+
+
+/** 
+GET
+Admin Logout  
+*/ 
+router.get('/logout', async (req, res) => {
+
+    try{
+        res.clearCookie('token') //remove cookie = logout => auth routes don't work anymore
+        //res.json({message: 'Logout Successful.'})
+
+        res.redirect('/') //double check why '/' is homepage!
+    }
+    catch(e){
+        console.log(e)
+    }
+});
+
+
 
 
 

@@ -5,19 +5,19 @@
     <nav class="header__nav">
         <ul>
             <li>
-                <a href="/" class="">Home</a>
+                <a href="/" class="<%= isActiveRoute('/', currentRoute) %>">Home</a>
             </li>
             <li>
-                <a href="/about" class="">About</a>
+                <a href="/about" class="<%= isActiveRoute('/', currentRoute) %>">About</a>
             </li>
         </ul>
     </nav>
 
     <div class="header__button">
         <!-- aria-expanded says whether something is visible and can be used-->
-        <button>
+        <a href="/logout">
             Logout
-        </button> 
+        </a> 
 
     </div>
 </header>

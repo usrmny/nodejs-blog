@@ -33,6 +33,7 @@ router.get('', async (req, res) => {
             locals, //can't be removed, since header is using it
             data, //data to send all the pages to the html file => loops over all data in ejs!!!
             current: page,
+            currentRoute: '/',
             nextPage: hasNextPage ? nextPage : null //nextPage is used in index as <a href="/?page=<%= nextPage %>"...<view older posts...
          });
 
@@ -47,7 +48,9 @@ router.get('', async (req, res) => {
 
 
 router.get('/about', (req, res) => {
-    res.render('about');
+    res.render('about', {
+        currentRoute: '/about' //can put in all routes to change button to grey when in that page.
+    });
 });
 
 
@@ -71,7 +74,7 @@ router.get('/post/:id', async (req, res) => {
         res.render('post', { 
             locals, 
             data,
-            currentRoute: `/post/${slug}`
+            currentRoute: `/post${slug}`
         })
 
 
@@ -112,7 +115,8 @@ router.post('/search', async (req, res) => {
             
         res.render("search", {
             data,
-            locals
+            locals,
+            currentRoute:'/'
         })
 
     } catch(e){
