@@ -53,6 +53,12 @@ router.get('/about', (req, res) => {
     });
 });
 
+router.get('/admin', (req, res) => {
+    res.render('admin', {
+        currentRoute: '/admin' //can put in all routes to change button to grey when in that page.
+    });
+});
+
 
 /** 
 GET
