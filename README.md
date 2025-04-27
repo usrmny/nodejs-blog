@@ -1,3 +1,7 @@
+<b>What's needed:</b>
+- Node.js
+- MongoDB Free Cluster
+
 <b>To run:</b>
 
 First, ensure you have a MongoDB free database cluster: https://www.mongodb.com/
