@@ -1,3 +1,4 @@
+<b>Preview:</b>
 ![App Screenshot](assets/actual_pic1.png)
 
 <b>What's needed:</b>
