@@ -1,4 +1,4 @@
-![App Screenshot](actual_pic1.png)
+![App Screenshot](assets/actual_pic1.png)
 
 <b>What's needed:</b>
 - Node.js
