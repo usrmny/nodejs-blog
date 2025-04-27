@@ -16,8 +16,8 @@ Then move into the project directory:
 <pre><bash>cd nodejs-blog</bash></pre>
 
 Fourth, make sure you have Node.js installed. Then to install the dependencies and start a server, run:
-<bash>npm install
-npm run dev</bash>
+<pre><bash>npm install
+npm run dev</bash></pre>
 
 Finally, open `localhost:5000` in a brower to try it out.
 
