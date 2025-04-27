@@ -1,3 +1,5 @@
+![App Screenshot](actual_pic1.png)
+
 <b>What's needed:</b>
 - Node.js
 - MongoDB Free Cluster
