@@ -1,4 +1,5 @@
-To run:
+<b>To run:</b>
+
 First, ensure you have a MongoDB free database cluster: https://www.mongodb.com/
 
 Second, create a .env file to store your credentials. Example below:
